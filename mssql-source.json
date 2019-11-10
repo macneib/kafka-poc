@@ -1,0 +1,21 @@
+{
+    "name": "adventure-connector",
+    "config": {
+        "connector.class": "io.debezium.connector.sqlserver.SqlServerConnector",
+        "tasks.max": "1",
+        "database.hostname": "mssql",
+        "database.port": "1433",
+        "database.user": "sa",
+        "database.password": "Password!",
+        "database.server.id": "184054",
+        "database.server.name": "adventrueworks",
+        "database.dbname": "AdventureWorks2017",
+        "database.whitelist": "AdventureWorks2017",
+        "database.history.kafka.bootstrap.servers": "kafka:9092",
+        "database.history.kafka.topic": "schema-changes.adventrueworks",
+        "transforms": "route",
+        "transforms.route.type": "org.apache.kafka.connect.transforms.RegexRouter",
+        "transforms.route.regex": "([^.]+)\\.([^.]+)\\.([^.]+)",
+        "transforms.route.replacement": "$3"
+    }
+}

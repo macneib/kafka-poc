@@ -1,0 +1,16 @@
+{
+    "name": "elastic-sink",
+    "config": {
+        "connector.class": "io.confluent.connect.elasticsearch.ElasticsearchSinkConnector",
+        "tasks.max": "1",
+        "topics": "Address",
+        "connection.url": "http://elasticsearch:9200",
+        "transforms": "unwrap,key",
+        "transforms.unwrap.type": "io.debezium.transforms.UnwrapFromEnvelope",
+        "transforms.key.type": "org.apache.kafka.connect.transforms.ExtractField$Key",
+        "transforms.key.field": "AddressID",
+        "topic.index.map": "Address:address",
+        "key.ignore": "false",
+        "type.name": "address"
+    }
+}

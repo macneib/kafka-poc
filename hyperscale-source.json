@@ -1,0 +1,21 @@
+{
+    "name": "echyperscaletest-connector",
+    "config": {
+        "connector.class": "io.debezium.connector.sqlserver.SqlServerConnector",
+        "tasks.max": "1",
+        "database.hostname": "ecmshyperscaletest.database.windows.net",
+        "database.port": "1433",
+        "database.user": "ecAdmin",
+        "database.password": "LHWruhBGerVs2iW9SkDk",
+        "database.server.id": "184054",
+        "database.server.name": "echyperscaletest",
+        "database.dbname": "ecHyperScaleTest",
+        "database.whitelist": "ecHyperScaleTest",
+        "database.history.kafka.bootstrap.servers": "kafka:9092",
+        "database.history.kafka.topic": "schema-changes.echyperscaletest",
+        "transforms": "route",
+        "transforms.route.type": "org.apache.kafka.connect.transforms.RegexRouter",
+        "transforms.route.regex": "([^.]+)\\.([^.]+)\\.([^.]+)",
+        "transforms.route.replacement": "$3"
+    }
+}
