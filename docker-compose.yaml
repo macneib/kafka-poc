@@ -30,17 +30,17 @@ services:
   #    - POSTGRES_USER=postgresuser
   #    - POSTGRES_PASSWORD=postgrespw
   #    - POSTGRES_DB=inventory
-  # mssql:
-  #   image: microsoft/mssql-server-linux:2017-CU9-GDR2
-  #   ports:
-  #    - 1433:1433
-  #   environment:
-  #    - ACCEPT_EULA=Y
-  #    - MSSQL_PID=Standard
-  #    - SA_PASSWORD=Password!
-  #    - MSSQL_AGENT_ENABLED=true
-  #   volumes:
-  #     - ${PWD}/db/AdventureWorks2017.bak:/tmp/AdventureWorks2017.bak
+  mssql:
+    image: microsoft/mssql-server-linux:2017-CU9-GDR2
+    ports:
+     - 1433:1433
+    environment:
+     - ACCEPT_EULA=Y
+     - MSSQL_PID=Standard
+     - SA_PASSWORD=Password!
+     - MSSQL_AGENT_ENABLED=true
+    volumes:
+      - ${PWD}/db/AdventureWorks2017.bak:/tmp/AdventureWorks2017.bak
   # elasticsearch:
   #   image: docker.elastic.co/elasticsearch/elasticsearch:6.8.1
   #   environment:
@@ -82,7 +82,7 @@ services:
     links:
      - kafka
      - mysql
-     #- mssql
+     - mssql
      #- postgres
      #- elasticsearch
      - zookeeper
@@ -93,12 +93,12 @@ services:
      - CONFIG_STORAGE_TOPIC=my_connect_configs
      - OFFSET_STORAGE_TOPIC=my_connect_offsets
      - STATUS_STORAGE_TOPIC=my_connect_statuses
-     - KEY_CONVERTER=io.confluent.connect.avro.AvroConverter
-     - VALUE_CONVERTER=io.confluent.connect.avro.AvroConverter
-     - INTERNAL_KEY_CONVERTER=org.apache.kafka.connect.json.JsonConverter
-     - INTERNAL_VALUE_CONVERTER=org.apache.kafka.connect.json.JsonConverter
-     - CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL=http://schema-registry:8081
-     - CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL=http://schema-registry:8081
+    #  - KEY_CONVERTER=io.confluent.connect.avro.AvroConverter
+    #  - VALUE_CONVERTER=io.confluent.connect.avro.AvroConverter
+    #  - INTERNAL_KEY_CONVERTER=org.apache.kafka.connect.json.JsonConverter
+    #  - INTERNAL_VALUE_CONVERTER=org.apache.kafka.connect.json.JsonConverter
+    #  - CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL=http://schema-registry:8081
+    #  - CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL=http://schema-registry:8081
   # Written and open sourced by Confluent, the Schema Registry for Apache Kafka enables
   # developers to define standard schemas for their events, share them across the
   # organization and safely evolve them in a way that is backward compatible and future proof.
@@ -222,27 +222,27 @@ services:
       KSQL_LISTENERS: http://0.0.0.0:8088
       KSQL_KSQL_SCHEMA_REGISTRY_URL: http://schema-registry:8081
   ksql-cli:
-    image: confluentinc/cp-ksql-cli:5.1.0
+    image: confluentinc/cp-ksql-cli:5.3.0
     depends_on:
       - ksql-server
     entrypoint: /bin/sh
     tty: true
-# Two options for getting dummy data in here, one calls out to a 
-# test generator on the web, another uses a local file. 
-# Both running isn't a problem, you'll just get twice the throughput.
-  kafkacat:
-    image: confluentinc/cp-kafkacat:latest
-    depends_on:
-      - kafka
-# echo "Waiting for Kafka "
-# cub kafka-ready -b kafka:29092 1 300 &&       
-    command: 
-      - bash 
-      - -c 
-      - |
-        while [ 1 -eq 1 ]
-          do awk '{print $$0;system("sleep 0.5");}' /data/txns.json | \
-              kafkacat -b kafka:9092 -P -t purchases
-          done
-    volumes: 
-      - $PWD/data:/data
+# # Two options for getting dummy data in here, one calls out to a 
+# # test generator on the web, another uses a local file. 
+# # Both running isn't a problem, you'll just get twice the throughput.
+#   kafkacat:
+#     image: confluentinc/cp-kafkacat:latest
+#     depends_on:
+#       - kafka
+# # echo "Waiting for Kafka "
+# # cub kafka-ready -b kafka:29092 1 300 &&       
+#     command: 
+#       - bash 
+#       - -c 
+#       - |
+#         while [ 1 -eq 1 ]
+#           do awk '{print $$0;system("sleep 0.5");}' /data/txns.json | \
+#               kafkacat -b kafka:9092 -P -t purchases
+#           done
+#     volumes: 
+#       - $PWD/data:/data

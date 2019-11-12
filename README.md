@@ -433,3 +433,58 @@ GO
 EXEC sys.sp_cdc_enable_db
 GO
 ```
+
+```
+USE AdventureWorks2017 
+GO 
+EXEC sys.sp_cdc_enable_table 
+@source_schema = N'HumanResources', 
+@source_name   = N'EmployeePayHistory', 
+@role_name     = NULL 
+GO
+```
+
+```
+docker exec -it <confluentinc/cp-ksql-cli-hash> bash
+```
+
+```
+ksql http://ksql-server:8088
+```
+
+```
+CREATE STREAM employee_from_adventureworks_1 (BusinessEntityID integer, JobTitle string, SickLeaveHours integer, VacationHours integer) WITH (KAFKA_TOPIC='adventrueworks.HumanResources.Employee',VALUE_FORMAT='json');
+```
+
+```
+LIST TOPICS;
+```
+
+```
+ksql> LIST STREAMS;
+
+ Stream Name                    | Kafka Topic                            | Format 
+----------------------------------------------------------------------------------
+ EMPLOYEE_FROM_ADVENTUREWORKS_1 | adventrueworks.HumanResources.Employee | JSON   
+----------------------------------------------------------------------------------
+
+```
+
+
+
+```
+SELECT * FROM EMPLOYEE_FROM_ADVENTUREWORKS_1;
+```
+
+```
+SELECT * FROM EMPLOYEE_FROM_ADVENTUREWORKS_1 WHERE JobTitle = 'Chief Executive Officer'
+```
+
+Then modify the table for SickDays from 69 to 68
+
+you should see the following stream result
+```
+1573527391053 | {"BusinessEntityID":1} | 1 | Chief Executive Officer | 69 | 99
+1573539035402 | {"BusinessEntityID":1} | 1 | Chief Executive Officer | 68 | 99
+
+```

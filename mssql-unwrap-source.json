@@ -12,6 +12,12 @@
         "database.dbname": "AdventureWorks2017",
         "database.whitelist": "AdventureWorks2017",
         "database.history.kafka.bootstrap.servers": "kafka:9092",
-        "database.history.kafka.topic": "schema-changes.adventrueworks"
+        "database.history.kafka.topic": "schema-changes.adventrueworks",
+        "transforms": "unwrap",
+        "transforms.unwrap.type": "io.debezium.transforms.UnwrapFromEnvelope",
+        "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+        "key.converter.schemas.enable": "false",
+        "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+        "value.converter.schemas.enable": "false"
     }
 }
